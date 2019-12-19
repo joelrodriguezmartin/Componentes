@@ -5,7 +5,7 @@
   <version>0.0.1</version>
   
   <name>Componentes</name>
-  <description>Plantilla para JavaFX Maven</description>
+  <description>Componentes de JavaFX personalizados</description>
   
   <properties>
   	<maven.compiler.target>11</maven.compiler.target>
