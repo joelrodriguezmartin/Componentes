@@ -60,33 +60,49 @@ public class DateChooser extends HBox implements Initializable {
 		};
 		getYearCombo().getEditor().textProperty().addListener(changeListener);
 		dateProperty.set(LocalDate.MIN);
-		System.out.println(dateProperty.get().toString());
+		
 		getMonthCombo().getSelectionModel().selectedItemProperty().addListener(e -> changeDate(1));
 		getDayCombo().getSelectionModel().selectedItemProperty().addListener(e -> changeDate(2));
 		getYearCombo().getSelectionModel().selectedItemProperty().addListener(e -> changeDate(3));
-
+		
+		dateProperty.addListener(e -> setCombos());
 	}
 
 
+
+	private void setCombos() {
+		int month = dateProperty.get().getMonthValue();
+		int day = dateProperty.get().getDayOfMonth();
+		int year = dateProperty.get().getYear();
+		
+		getYearCombo().getSelectionModel().select(year+"");
+		getMonthCombo().getSelectionModel().select(month-1);
+		getDayCombo().getSelectionModel().select(day-1);
+		
+	}
 
 	private void changeDate(int cod) {
 		switch (cod) {
 		case 1:
 			int month = getMonthCombo().getSelectionModel().getSelectedIndex() + 1;
 			dateProperty.set(dateProperty.get().withMonth(month));			
-			System.out.println(dateProperty.get().toString());
+		
 			break;
 
 		case 2:
-			int day = getDayCombo().getSelectionModel().getSelectedItem();
-			dateProperty.set(dateProperty.get().withDayOfMonth(day));
-			System.out.println(dateProperty.get().toString());
+			try {
+				int day = getDayCombo().getSelectionModel().getSelectedItem();
+				dateProperty.set(dateProperty.get().withDayOfMonth(day));
+				
+			} catch (NullPointerException e) {
+				
+			}
 			break;
 		
 		case 3:
 			int year = Integer.parseInt(getYearCombo().getSelectionModel().getSelectedItem());
 			dateProperty.set(dateProperty.get().withYear(year));
-			System.out.println(dateProperty.get().toString());
+			
 			break;
 		}
 	}
@@ -117,13 +133,14 @@ public class DateChooser extends HBox implements Initializable {
 
 	private void changeMonth() {
 		int month = getMonthCombo().getSelectionModel().getSelectedIndex();
+		getDayCombo().getItems().clear();
 		String year = "";
 		if (getYearCombo().getSelectionModel().getSelectedItem() != null) {
 			year = getYearCombo().getSelectionModel().getSelectedItem();
 		}
 
 		if (month == 1) {
-			getDayCombo().getItems().removeAll();
+			
 			if (year == "" || !Year.of(Integer.parseInt(year)).isLeap()) {
 				for (int i = 1; i < 29; i++) {
 					getDayCombo().getItems().add(i);
@@ -135,12 +152,12 @@ public class DateChooser extends HBox implements Initializable {
 				}
 			}
 		} else if (month == 0 | month == 2 | month == 4 | month == 6 | month == 7 | month == 9 | month == 11) {
-			getDayCombo().getItems().removeAll();
+		
 			for (int i = 1; i <= 31; i++) {
 				getDayCombo().getItems().add(i);
 			}
 		} else {
-			getDayCombo().getItems().removeAll();
+		
 			for (int i = 1; i < 31; i++) {
 				getDayCombo().getItems().add(i);
 			}
